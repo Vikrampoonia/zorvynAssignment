@@ -1,5 +1,6 @@
 
-import { Op } from "sequelize";
+import { Op, cast, col, where } from "sequelize";
+import type { WhereOptions } from "sequelize";
 import { RecordModel } from "../models/record.js";
 import type { RecordType } from "../models/constants.js";
 import messages from "../models/messages.js";
@@ -29,9 +30,11 @@ type DeleteRecordPayload = {
 
 type GetRecordPayload = {
     id?: number;
+    amount?: number;
     date?: Date;
     category?: string;
     type?: RecordType;
+    notes?: string;
     pageSize: number;
     pageNumber: number;
 };
@@ -58,8 +61,9 @@ class recordService {
         });
     }
 
-    async getRecord({ id, date, category, type, pageSize, pageNumber }: GetRecordPayload) {
-        const whereClause: Record<string, unknown> = {};
+    async getRecord({ id, amount, date, category, type, notes, pageSize, pageNumber }: GetRecordPayload) {
+        let whereClause: WhereOptions = {};
+        const andConditions: WhereOptions[] = [];
 
         if (id !== undefined) {
             whereClause.id = id;
@@ -75,8 +79,27 @@ class recordService {
             whereClause.type = type;
         }
 
+        if (amount !== undefined) {
+            andConditions.push(where(cast(col("amount"), "TEXT"), {
+                [Op.iLike]: `%${amount}%`,
+            }));
+        }
+
+        if (notes !== undefined) {
+            whereClause.notes = {
+                [Op.iLike]: `%${notes}%`,
+            };
+        }
+
         if (date !== undefined) {
             whereClause.date = date;
+        }
+
+        if (andConditions.length > 0) {
+            whereClause = {
+                ...whereClause,
+                [Op.and]: andConditions,
+            };
         }
 
         const offset = (pageNumber - 1) * pageSize;

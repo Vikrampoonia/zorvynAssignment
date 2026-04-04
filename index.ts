@@ -12,6 +12,7 @@ import userRouter from "./routers/userRouter.js";
 import recordRouter from "./routers/recordRouter.js";
 import authRouter from "./routers/authRouter.js";
 import authService from "./services/authService.js";
+import { globalRateLimiter } from "./middlewares/rateLimit.js";
 
 dotenv.config();
 
@@ -32,6 +33,9 @@ app.use(
 // Modern Express built-in body parsing 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
+
+// Global request throttling
+app.use(globalRateLimiter);
 
 // 2. API Routing & Logging Middleware
 app.use(

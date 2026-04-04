@@ -25,9 +25,11 @@ export type RecordDeleteRequest = {
 
 export type RecordGetRequest = {
     id: QueryValue;
+    amount: QueryValue;
     date: QueryValue;
     category: QueryValue;
     type: QueryValue;
+    notes: QueryValue;
     pageSize: QueryValue;
     pageNumber: QueryValue;
 };

@@ -33,6 +33,30 @@ class Constants {
         serviceUnavailable: number;
         modified: number;
     };
+    rateLimit: {
+        windowMs: number;
+        global: number;
+        auth: {
+            login: number;
+            sendOtp: number;
+            verifyOtp: number;
+            refreshToken: number;
+            logout: number;
+        };
+        user: {
+            createUser: number;
+            updateUser: number;
+            deleteUser: number;
+            getUser: number;
+        };
+        record: {
+            createRecord: number;
+            updateRecord: number;
+            deleteRecord: number;
+            getRecord: number;
+            getDashboardSummary: number;
+        };
+    };
 
     constructor () {
 
@@ -50,6 +74,31 @@ class Constants {
             notAllowed: 405,
             serviceUnavailable: 503,
             modified: 302,
+        };
+
+        this.rateLimit = {
+            windowMs: 15 * 60 * 1000,
+            global: 1000,
+            auth: {
+                login: 40,
+                sendOtp: 20,
+                verifyOtp: 30,
+                refreshToken: 60,
+                logout: 60,
+            },
+            user: {
+                createUser: 30,
+                updateUser: 40,
+                deleteUser: 20,
+                getUser: 100,
+            },
+            record: {
+                createRecord: 80,
+                updateRecord: 80,
+                deleteRecord: 40,
+                getRecord: 150,
+                getDashboardSummary: 100,
+            },
         };
     }
 };

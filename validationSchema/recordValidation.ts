@@ -37,9 +37,11 @@ export const deleteRecordSchema = z.object({
 
 export const getRecordSchema = z.object({
     id: createPositiveIdSchema(messages.record.idMustBePositive).optional(),
+    amount: z.coerce.number().positive(messages.record.amountMustBeGreaterThanZero).optional(),
     date: z.coerce.date().optional(),
     category: z.string().trim().min(1, messages.record.categoryCannotBeEmpty).optional(),
     type: z.enum(RECORD_TYPES).optional(),
+    notes: z.string().trim().min(1, messages.record.notesCannotBeEmpty).optional(),
 }).merge(paginationSchema);
 
 export const dashboardSummarySchema = z.object({

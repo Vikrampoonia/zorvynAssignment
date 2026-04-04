@@ -44,15 +44,17 @@ class recordController {
         return res;
     }
 
-    async getRecord({ id, date, category, type, pageSize, pageNumber }: RecordGetRequest) {
+    async getRecord({ id, amount, date, category, type, notes, pageSize, pageNumber }: RecordGetRequest) {
         let res = new result();
         const { httpStatus } = constants;
         try {
             const validationResult = getRecordSchema.safeParse({
                 id,
+                amount,
                 date,
                 category,
                 type,
+                notes,
                 pageSize,
                 pageNumber,
             });
@@ -66,9 +68,11 @@ class recordController {
             const safePageSize = Math.min(validationResult.data.pageSize, 50);
             const data = await recordService.getRecord({
                 ...(validationResult.data.id !== undefined ? { id: validationResult.data.id } : {}),
+                ...(validationResult.data.amount !== undefined ? { amount: validationResult.data.amount } : {}),
                 ...(validationResult.data.date !== undefined ? { date: validationResult.data.date } : {}),
                 ...(validationResult.data.category !== undefined ? { category: validationResult.data.category } : {}),
                 ...(validationResult.data.type !== undefined ? { type: validationResult.data.type } : {}),
+                ...(validationResult.data.notes !== undefined ? { notes: validationResult.data.notes } : {}),
                 pageSize: safePageSize,
                 pageNumber: validationResult.data.pageNumber,
             });

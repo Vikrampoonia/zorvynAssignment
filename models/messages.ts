@@ -51,6 +51,7 @@ class Messages {
         idMustBePositive: string;
         atLeastOneFieldRequiredToUpdate: string;
         trendWeeklyOrMonthly: string;
+        notesCannotBeEmpty: string;
         notFound: string;
     };
 
@@ -115,6 +116,7 @@ class Messages {
             idMustBePositive: "id must be a positive number",
             atLeastOneFieldRequiredToUpdate: "At least one field is required to update",
             trendWeeklyOrMonthly: "trend must be weekly or monthly",
+            notesCannotBeEmpty: "notes cannot be empty",
             notFound: "Record not found",
         };
 
