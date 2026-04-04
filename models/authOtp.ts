@@ -1,41 +1,45 @@
 import { DataTypes, Model } from "sequelize";
 import type { CreationOptional, InferAttributes, InferCreationAttributes } from "sequelize";
-import { USER_ROLES, USER_STATUSES, sequelize } from "./constants.js";
+import { sequelize } from "./constants.js";
 
-export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
+export class AuthOtp extends Model<InferAttributes<AuthOtp>, InferCreationAttributes<AuthOtp>> {
     declare id: CreationOptional<number>;
-    declare name: string;
     declare phoneNumber: string;
-    declare role: (typeof USER_ROLES)[number];
-    declare status: (typeof USER_STATUSES)[number];
+    declare otp: string;
+    declare verified: CreationOptional<boolean>;
+    declare expiresAt: Date;
+    declare usedAt: CreationOptional<Date | null>;
     declare createdAt: CreationOptional<Date>;
     declare updatedAt: CreationOptional<Date>;
 }
 
-User.init(
+AuthOtp.init(
     {
         id: {
             type: DataTypes.INTEGER,
             autoIncrement: true,
             primaryKey: true,
         },
-        name: {
-            type: DataTypes.STRING(120),
-            allowNull: false,
-        },
         phoneNumber: {
             type: DataTypes.STRING(10),
             allowNull: false,
-            unique: true,
         },
-        role: {
-            type: DataTypes.ENUM(...USER_ROLES),
+        otp: {
+            type: DataTypes.STRING(20),
             allowNull: false,
         },
-        status: {
-            type: DataTypes.ENUM(...USER_STATUSES),
+        verified: {
+            type: DataTypes.BOOLEAN,
             allowNull: false,
-            defaultValue: "active",
+            defaultValue: false,
+        },
+        expiresAt: {
+            type: DataTypes.DATE,
+            allowNull: false,
+        },
+        usedAt: {
+            type: DataTypes.DATE,
+            allowNull: true,
         },
         createdAt: {
             type: DataTypes.DATE,
@@ -48,8 +52,10 @@ User.init(
     },
     {
         sequelize,
-        modelName: "User",
-        tableName: "users",
+        modelName: "AuthOtp",
+        tableName: "auth_otps",
         timestamps: true,
     }
 );
+
+export default AuthOtp;
