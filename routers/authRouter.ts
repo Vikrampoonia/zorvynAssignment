@@ -3,7 +3,7 @@ import type { Request, Response } from "express";
 import authController from "../controllers/authController.js";
 import auth from "../middlewares/auth.js";
 import { authRateLimiters } from "../middlewares/rateLimit.js";
-import type { AuthLoginRequest, AuthLogoutRequest, AuthRefreshTokenRequest, AuthSendOtpRequest, AuthVerifyOtpRequest } from "../types/authTypes.js";
+import type { AuthLoginRequest, AuthRefreshTokenRequest, AuthSendOtpRequest, AuthVerifyOtpRequest } from "../types/authTypes.js";
 const router = express.Router();
 
 router.post("/login", authRateLimiters.login, async function (req: Request<{}, unknown, unknown, AuthLoginRequest>, res: Response) {
@@ -25,10 +25,7 @@ router.post("/verify-otp", authRateLimiters.verifyOtp, async function (req: Requ
 });
 
 router.post("/refresh-token", authRateLimiters.refreshToken, async function (req: Request<{}, unknown, unknown, Partial<AuthRefreshTokenRequest>>, res: Response) {
-    const requestPayload = {
-        ...(req.query as Partial<AuthRefreshTokenRequest>),
-        ...(req.body as Partial<AuthRefreshTokenRequest>),
-    };
+    const requestPayload = (req.query as Partial<AuthRefreshTokenRequest>);
     const { refreshToken } = requestPayload;
     const data = await authController.refreshToken({ refreshToken });
     res.status(data.status).send(data);
